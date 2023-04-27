@@ -8,7 +8,8 @@ public class SynchronizedBuffer implements Buffer{
             while (occupied) {
                 System.out.println("producer tries to write");
                 displayState("buffer is full. producer waits");
-                wait();
+                synchronized (this){
+                wait();}
             }
         }
         catch (IllegalMonitorStateException illegalMonitorStateException)
@@ -18,12 +19,14 @@ public class SynchronizedBuffer implements Buffer{
         buffer=value;
         occupied=true;
         displayState("producer writes.");
+        synchronized (this){
         try {
-            notifyAll();
+            notify();
         }
         catch (IllegalMonitorStateException illegalMonitorStateException)
         {
             illegalMonitorStateException.printStackTrace();
+        }
         }
     }
 
@@ -33,7 +36,8 @@ public class SynchronizedBuffer implements Buffer{
             while (!occupied) {
                 System.out.println("consumer tries to read.");
                 displayState("buffer is empty. can't read");
-                wait();
+                synchronized (this){
+                wait(); }
             }
         }
         catch (IllegalMonitorStateException illegalMonitorStateException)
@@ -42,14 +46,13 @@ public class SynchronizedBuffer implements Buffer{
         }
         occupied=false;
         displayState("consumer reads "+buffer);
-        try {
-            notifyAll();
+        synchronized (this) {
+            try {
+                notify();
+            } catch (IllegalMonitorStateException illegalMonitorStateException) {
+                illegalMonitorStateException.printStackTrace();
+            }
         }
-        catch (IllegalMonitorStateException illegalMonitorStateException)
-        {
-            illegalMonitorStateException.printStackTrace();
-        }
-
         return buffer;
     }
 
