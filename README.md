@@ -1,4 +1,4 @@
-# Java-Programming-Second-Year
+# Java-Programming
 Classworks on different topics in 'java' will be uploaded in this repository. 
 Topics are:
 1. Collection Framework
